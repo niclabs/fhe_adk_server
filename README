@@ -1,0 +1,28 @@
+2014-2015 NIC Chile Research Labs
+
+This code is part of a proof of concept of a location privacy layer for Adkintunmobile. It corresponds to the Querier, Processor and Decryptor modules that run on the server side. It uses the C++ HElib library that implements Leveled Fully Homomorphic encryption (FHE) scheme (BGV).
+
+----------------------------------------------------------------------------
+Context:
+
+
+In order to measure the quality of access to mobile Internet, NIC Chile Research Labs developed Adkintun Mobile, a passive monitor installed in volunteer users' mobile phones. Periodically, the client application records data related to network state, which is sent to the collector server. Researchers of the laboratory have access to such stored data.
+
+Since from connexion to antennas location can be deduced, location data of individuals is exposed to researchers, which is a concern for location privacy. Moreover, as only four spatio-temporal points are enough to identify 95% of the population in an anonymized dataset, this work takes a cryptographic approach to solve the problem.
+
+We propose a model where researchers can access, query and compute aggregations on stored data, learning nothing more about users' location than the result of the aggregation. Our model uses homomorphic encryption to preserve location privacy. Location data is sent encrypted from mobile devices to the server. The server can homomorphically evaluate predefined functions such as counting the number of users in a given location. Query and result decryption are performed from a separate layer, which protects the secret key from being used for direct 
+decryption of the records.
+
+We implemented two versions of the location privacy layer using a Leveled Fully Homomorphic encryption (FHE) scheme (BGV), and a Partial (additive) Homomorphic encryption (PHE) scheme (Paillier). The overhead and performance evaluation show that both versions are adequate for offline statistical analysis.
+
+The contribution of this work is to propose a practical use of FHE for location privacy; and to discuss the trade-off between location privacy and system performance for implementations using FHE and PHE.
+
+----------------------------------------------------------------------------
+
+The modules: 
+
+-The Querier is given an antenna identifier (mnc, lac, cid) of which a researcher wants to know the number of records that correspond to it (count function). This identifiers are sent to the Processor.
+-The Processor module queries the database and retrieve all the records corresponding to the mnc. These records are used as input to homomorphically evaluate a predefined location function (count the number of records corresponding to the given antenna) that outputs a ciphertext as result. The ciphertext is sent to the Decryptor module.
+-The Decryptor module takes this ciphertext as input, decrypts it and returns the final result of the function evaluation, which is sent back to the Querier module.
+
+
